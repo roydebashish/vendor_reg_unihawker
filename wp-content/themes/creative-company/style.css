@@ -2644,3 +2644,16 @@ p {
 /*=======================
 	End Blog
 =========================*/
+
+/*Debashish*/
+.single-news .title{display: none}
+button.vendor-btn{
+	padding: 6px 12px !important;
+	color:#fff !important;
+
+}
+#vendorReg{
+	width: 100%;
+	display: block;
+	overflow:hidden;
+}
