@@ -300,19 +300,26 @@ function unihawker_vendor_form(){
 		</div>
 		<div class="form-group ">
 			<label for="email">Email address</label>
-			<input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" required="required">
+			<input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" required="required">
 			<small id="emailHelp" class="form-text text-muted">This email will be used to communicate with you.</small>
 		</div>
 		<div class="form-group">
 			<label for="phone">Phone *</label>
-			<input type="text" class="form-control" id="phone" placeholder="Phone Number" required="required">
+			<input type="text" name="phone" class="form-control" id="phone" placeholder="Phone Number" required="required">
 		</div>
 		<div class="form-check">
-			<input type="checkbox" class="form-check-input" id="terms" required="required">
+			<input name="terms" type="checkbox" class="form-check-input"  value="1" required="required">
 			<label class="form-check-label" for="terms">Agree to terms & conditions.</label>
 		</div>
-		<button id="" class="btn btn-primary vendor-btn">Submit</button>
+		<input type="submit" name="submit" id="" class="btn btn-primary vendor-btn" value="vendor_data"/>
 		
 	</form>';
 	echo $form;
+}
+//
+add_action('init','store_vendor_reg_data');
+function store_vendor_reg_data(){
+	if(isset($_POST) && $_POST['submit'] == "vendor_data"){
+		
+	}
 }
