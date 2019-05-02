@@ -6,7 +6,6 @@
  *
  * @package creative-company
  */
-
 if(!empty($_POST)){
     $message = "";
     $errors = array();
@@ -21,6 +20,8 @@ if(!empty($_POST)){
     }
     if(!is_email($_POST['email'])){
         $errors['email'] = "Please enter valid email";
+    }elseif(is_duplicate_email($_POST['email'])){
+        $errors['email'] = "Email address already taken";
     }
     if(empty($_POST['phone'])){
         $errors['phone'] = "Please enter phone number";
@@ -29,18 +30,30 @@ if(!empty($_POST)){
         $errors['terms'] = "Please check terms & conditions";
     }
 
+    //prepare data array
+    $data = array();
+    $data['owner_name'] = $_POST['owner_name'] ;      
+    $data['store_name'] = $_POST['store_name'];
+    $data['store_email'] = $_POST['store_email'];
+    $data['email'] = $_POST['email'];
+    $data['phone'] = $_POST['phone'];
+
     if(empty($errors)){//no error store data.
        global $wpdb;
-       $data = array();
-       $data['owner_name'] = $_POST['owner_name'] ;      
-       $data['store_name'] = $_POST['store_name'];
-       $data['store_email'] = $_POST['store_email'];
-       $data['email'] = $_POST['email'];
-       $data['phone'] = $_POST['phone'];
-
        $insert = $wpdb->insert('wp_vendor_reg_data', $data);
        if($insert){
             $message = "Your request submitted. We will contact you soon";
+            $data['owner_name'] = "" ;      
+            $data['store_name'] = '';
+            $data['store_email'] ='';
+            $data['email'] = '';
+            $data['phone'] = '';
+            $data['terms'] = '';
+           // $_POST = array();
+           $msg = "New vendor Registered. name: ".$_POST['owner_name'].". Email: ".$_POST['email'];
+           $subject = "New vendor registration";
+
+           wp_mail('roy.debashish@outlook.com', $subject, $msg);
        }else{
             $message = "Your request could not be completed. Due to internal problem. Try again later";
        }
@@ -67,41 +80,41 @@ if(!empty($_POST)){
                     <form action="<?php the_permalink(); ?>" method="POST" id="vendorReg">
                         <div class="form-group ">
                             <label for="owner_name">Owner Name *</label>
-                            <input type="text" name="owner_name" class="form-control" value="<?php if(!empty( $_POST['owner_name'])){echo $_POST['owner_name']; }?>" aria-describedby="" placeholder="Enter owner name" ">
+                            <input type="text" name="owner_name" class="form-control" value="<?php if(!empty( $data['owner_name'])){echo $data['owner_name']; }?>" aria-describedby="" placeholder="Enter owner name" ">
                             <?php if(!empty($errors['owner_name'])){ ?>
                             <small id="emailHelp" class="form-text text-muted error"><?php echo $errors['owner_name']; ?></small>
                             <?php } ?>
                         </div>
                         <div class="form-group ">
                             <label for="store_name">Store Name *</label>
-                            <input type="text" name="store_name" class="form-control" value="<?php if(!empty( $_POST['store_name'])){echo $_POST['store_name']; }?>" aria-describedby="" placeholder="Enter store name" ">
+                            <input type="text" name="store_name" class="form-control" value="<?php if(!empty( $data['store_name'])){echo $data['store_name']; }?>" aria-describedby="" placeholder="Enter store name" ">
                             <?php if(!empty($errors['store_name'])){ ?>
                             <small id="emailHelp" class="form-text text-muted error"><?php echo $errors['store_name']; ?></small>
                             <?php } ?>
                         </div>
                         <div class="form-group ">
                             <label for="store_email">Store Email *</label>
-                            <input type="email" name="store_email" class="form-control" value="<?php if(!empty( $_POST['store_name'])){echo $_POST['store_name']; }?>" aria-describedby="" placeholder="Enter store email" ">
+                            <input type="email" name="store_email" class="form-control" value="<?php if(!empty( $data['store_email'])){echo $data['store_name']; }?>" aria-describedby="" placeholder="Enter store email" ">
                             <?php if(!empty($errors['store_email'])){ ?>
                             <small id="emailHelp" class="form-text text-muted error"><?php echo $errors['store_email']; ?></small>
                             <?php } ?>
                         </div>
                         <div class="form-group ">
                             <label for="email">Email address</label>
-                            <input type="email" name="email" class="form-control" value="<?php if(!empty( $_POST['email'])){echo $_POST['email']; }?>" aria-describedby="emailHelp" placeholder="Enter email" ">
+                            <input type="email" name="email" class="form-control" value="<?php if(!empty( $data['email'])){echo $data['email']; }?>" aria-describedby="emailHelp" placeholder="Enter email" ">
                             <?php if(!empty($errors['email'])){ ?>
                             <small id="emailHelp" class="form-text text-muted error"><?php echo $errors['email']; ?></small>
                             <?php } ?>
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone *</label>
-                            <input type="text" name="phone" class="form-control" value="<?php if(!empty( $_POST['phone'])){echo $_POST['phone']; }?>" placeholder="Phone Number" ">
+                            <input type="text" name="phone" class="form-control" value="<?php if(!empty( $data['phone'])){echo $data['phone']; }?>" placeholder="Phone Number" ">
                             <?php if(!empty($errors['phone'])){ ?>
                             <small id="emailHelp" class="form-text text-muted error"><?php echo $errors['phone']; ?></small>
                             <?php } ?>
                         </div>
                         <div class="form-check">
-                            <input name="terms" id="terms" type="checkbox" class="form-check-input"  <?php if(!empty( $_POST['terms'])){echo 'checked'; } ?> value="1" ">
+                            <input name="terms" id="terms" type="checkbox" class="form-check-input"  <?php if(!empty( $data['terms'])){echo 'checked'; } ?> value="1" ">
                             <label class="form-check-label" for="terms">Agree to terms & conditions.</label>
                             <?php if(!empty($errors['terms'])){ ?>
                             <small id="emailHelp" class="form-text text-muted error"><?php echo $errors['terms']; ?></small>

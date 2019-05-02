@@ -282,44 +282,15 @@ function creative_company_pagination( $echo = true ) {
 	}
 }
 
-/** vendor registartion form shortcode */
-add_shortcode('vendor_form', 'unihawker_vendor_form');
-function unihawker_vendor_form(){
-	$form = '<form action="" method="POST" id="vendorReg">
-		<div class="form-group ">
-			<label for="owner_name">Owner Name *</label>
-			<input type="text" class="form-control" id="owner_name" aria-describedby="" placeholder="Enter owner name" required="required">
-		</div>
-		<div class="form-group ">
-			<label for="store_name">Store Name *</label>
-			<input type="text" class="form-control" id="store" aria-describedby="" placeholder="Enter store name" required="required">
-		</div>
-		<div class="form-group ">
-			<label for="store_email">Store Email *</label>
-			<input type="email" class="form-control" id="store_email" aria-describedby="" placeholder="Enter store email" required="required">
-		</div>
-		<div class="form-group ">
-			<label for="email">Email address</label>
-			<input type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" required="required">
-			<small id="emailHelp" class="form-text text-muted">This email will be used to communicate with you.</small>
-		</div>
-		<div class="form-group">
-			<label for="phone">Phone *</label>
-			<input type="text" name="phone" class="form-control" id="phone" placeholder="Phone Number" required="required">
-		</div>
-		<div class="form-check">
-			<input name="terms" type="checkbox" class="form-check-input"  value="1" required="required">
-			<label class="form-check-label" for="terms">Agree to terms & conditions.</label>
-		</div>
-		<input type="submit" name="submit" id="" class="btn btn-primary vendor-btn" value="vendor_data"/>
-		
-	</form>';
-	echo $form;
-}
-//
-add_action('init','store_vendor_reg_data');
-function store_vendor_reg_data(){
-	if(isset($_POST) && $_POST['submit'] == "vendor_data"){
-		
+function is_duplicate_email($email)
+{
+	global $wpdb;
+	$rows = $wpdb->get_results("select id from wp_vendor_reg_data where email ='".$email."'");
+	
+	if(count($rows) >= 1){
+		return true;
+	}else{
+		return false; 
 	}
+
 }
